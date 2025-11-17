@@ -1,6 +1,6 @@
-import { User } from '../models/User';
-import { hashPassword, comparePassword } from '../utils/crypto';
-import { generateToken } from '../utils/jwt';
+import { User } from '../models/User.js';
+import { hashPassword, comparePassword } from '../utils/crypto.js';
+import { generateToken } from '../utils/jwt.js';
 
 interface RegisterData {
   email: string;

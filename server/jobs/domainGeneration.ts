@@ -1,7 +1,7 @@
 import cron from 'node-cron';
-import { DomainService } from '../services/domainService';
-import { NewsService } from '../services/newsService';
-import { config } from '../config';
+import { DomainService } from '../services/domainService.js';
+import { NewsService } from '../services/newsService.js';
+import { config } from '../config/index.js';
 
 const domainService = new DomainService();
 const newsService = new NewsService();

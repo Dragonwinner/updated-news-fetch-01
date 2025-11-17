@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { DomainController } from '../controllers/domainController';
-import { authenticate, requireAdmin } from '../middleware/auth';
+import { DomainController } from '../controllers/domainController.js';
+import { authenticate, requireAdmin } from '../middleware/auth.js';
 
 const router = Router();
 const domainController = new DomainController();

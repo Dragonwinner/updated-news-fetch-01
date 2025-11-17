@@ -1,10 +1,10 @@
-import { AuthService } from '../services/authService';
-import { DomainService } from '../services/domainService';
-import { NewsService } from '../services/newsService';
-import { AnalyticsService } from '../services/analyticsService';
-import { ABTestingService } from '../services/abTestingService';
-import { adminService } from '../services/adminService';
-import { UserAlert } from '../models/UserAlert';
+import { AuthService } from '../services/authService.js';
+import { DomainService } from '../services/domainService.js';
+import { NewsService } from '../services/newsService.js';
+import { AnalyticsService } from '../services/analyticsService.js';
+import { ABTestingService } from '../services/abTestingService.js';
+import { adminService } from '../services/adminService.js';
+import { UserAlert } from '../models/UserAlert.js';
 
 const authService = new AuthService();
 const domainService = new DomainService();

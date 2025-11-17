@@ -1,6 +1,6 @@
 import { Response } from 'express';
-import { AuthRequest } from '../middleware/auth';
-import { adminService } from '../services/adminService';
+import { AuthRequest } from '../middleware/auth.js';
+import { adminService } from '../services/adminService.js';
 
 /**
  * Get comprehensive dashboard statistics

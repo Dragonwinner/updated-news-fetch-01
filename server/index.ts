@@ -5,16 +5,16 @@ import compression from 'compression';
 import morgan from 'morgan';
 import { ApolloServer } from '@apollo/server';
 import { createServer } from 'http';
-import { config } from './config';
-import { connectDatabase } from './config/database';
-import { connectRedis } from './config/redis';
-import { typeDefs } from './graphql/schema';
-import { resolvers } from './graphql/resolvers';
-import { initializeWebSocket } from './websocket';
-import { startDomainGenerationJob } from './jobs/domainGeneration';
-import routes from './routes';
-import { apiLimiter, graphqlLimiter } from './middleware/rateLimit';
-import { verifyToken } from './utils/jwt';
+import { config } from './config/index.js';
+import { connectDatabase } from './config/database.js';
+import { connectRedis } from './config/redis.js';
+import { typeDefs } from './graphql/schema.js';
+import { resolvers } from './graphql/resolvers.js';
+import { initializeWebSocket } from './websocket/index.js';
+import { startDomainGenerationJob } from './jobs/domainGeneration.js';
+import routes from './routes/index.js';
+import { apiLimiter, graphqlLimiter } from './middleware/rateLimit.js';
+import { verifyToken } from './utils/jwt.js';
 
 async function startServer() {
   const app = express();

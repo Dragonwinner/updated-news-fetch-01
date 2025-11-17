@@ -1,6 +1,6 @@
-import { AnalyticsEvent } from '../models/AnalyticsEvent';
-import { getRedisClient } from '../config/redis';
-import { config } from '../config';
+import { AnalyticsEvent } from '../models/AnalyticsEvent.js';
+import { getRedisClient } from '../config/redis.js';
+import { config } from '../config/index.js';
 import { Op } from 'sequelize';
 
 export class AnalyticsService {

@@ -15,7 +15,9 @@ interface NewsArticleAttributes {
   updatedAt?: Date;
 }
 
-interface NewsArticleCreationAttributes extends Optional<NewsArticleAttributes, 'id' | 'extractedKeywords' | 'processedAt'> {}
+interface NewsArticleCreationAttributes extends Optional<NewsArticleAttributes, 'id' | 'extractedKeywords' | 'processedAt'> {
+  // Empty interface to satisfy type requirements
+}
 
 export class NewsArticle extends Model<NewsArticleAttributes, NewsArticleCreationAttributes> implements NewsArticleAttributes {
   public id!: string;

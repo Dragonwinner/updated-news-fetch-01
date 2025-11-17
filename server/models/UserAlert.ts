@@ -15,7 +15,9 @@ interface UserAlertAttributes {
   updatedAt?: Date;
 }
 
-interface UserAlertCreationAttributes extends Optional<UserAlertAttributes, 'id' | 'domainId' | 'lastTriggered'> {}
+interface UserAlertCreationAttributes extends Optional<UserAlertAttributes, 'id' | 'domainId' | 'lastTriggered'> {
+  // Empty interface to satisfy type requirements
+}
 
 export class UserAlert extends Model<UserAlertAttributes, UserAlertCreationAttributes> implements UserAlertAttributes {
   public id!: string;

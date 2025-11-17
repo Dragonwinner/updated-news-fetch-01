@@ -72,8 +72,6 @@ export class DomainService {
         // Generate domains for each keyword
         for (const keyword of allKeywords) {
           for (const tld of this.tlds) {
-            const domainName = `${keyword}${tld}`;
-            
             // Check if domain already exists
             const existingDomain = await Domain.findOne({
               where: {

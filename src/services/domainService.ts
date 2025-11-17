@@ -1,6 +1,22 @@
 import { DomainSuggestion } from '../types';
+import { apiClient } from './apiClient';
 
-const TLD_LIST = ['.com', '.io', '.ai', '.app', '.tech'];
+let cachedTLDs: string[] | null = null;
+
+export async function getTLDs(): Promise<string[]> {
+  if (cachedTLDs) {
+    return cachedTLDs;
+  }
+
+  try {
+    const response = await apiClient.getTLDs();
+    cachedTLDs = response.tlds || ['.com', '.io', '.ai', '.app', '.tech'];
+    return cachedTLDs;
+  } catch (error) {
+    console.error('Error fetching TLDs:', error);
+    return ['.com', '.io', '.ai', '.app', '.tech'];
+  }
+}
 
 function calculateDomainScore(keyword: string): number {
   // Enhanced scoring based on keyword characteristics
@@ -13,9 +29,10 @@ function calculateDomainScore(keyword: string): number {
   return baseScore + lengthScore + hasNumbers + isAllLetters + memorabilityScore;
 }
 
-export function generateDomainSuggestions(keywords: string[]): DomainSuggestion[] {
+export async function generateDomainSuggestions(keywords: string[]): Promise<DomainSuggestion[]> {
   const suggestions: Map<string, DomainSuggestion> = new Map();
   const uniqueKeywords = [...new Set(keywords)];
+  const TLD_LIST = await getTLDs();
 
   uniqueKeywords.forEach((keyword) => {
     const cleanKeyword = keyword.toLowerCase()
@@ -44,4 +61,33 @@ export function generateDomainSuggestions(keywords: string[]): DomainSuggestion[
   return Array.from(suggestions.values())
     .sort((a, b) => b.score - a.score)
     .slice(0, 20); // Limit to top 20 suggestions
+}
+
+// Fetch domains from backend API
+export async function fetchDomainsFromAPI(filters?: {
+  tld?: string;
+  available?: boolean;
+  minScore?: number;
+  limit?: number;
+  offset?: number;
+}): Promise<DomainSuggestion[]> {
+  try {
+    const response = await apiClient.getDomains(filters);
+    return response.domains.map((domain: {
+      name: string;
+      tld: string;
+      available: boolean;
+      keywords: string[];
+      score: number;
+    }) => ({
+      name: `${domain.name}${domain.tld}`,
+      available: domain.available,
+      tld: domain.tld,
+      keywords: domain.keywords,
+      score: domain.score,
+    }));
+  } catch (error) {
+    console.error('Error fetching domains from API:', error);
+    return [];
+  }
 }

@@ -31,7 +31,7 @@ export class WebSocketService {
             this.clients.set(userId, new Set());
           }
           this.clients.get(userId)?.add(ws);
-        } catch (error) {
+        } catch {
           ws.send(JSON.stringify({ type: 'error', message: 'Invalid token' }));
           ws.close();
           return;
@@ -42,7 +42,7 @@ export class WebSocketService {
       ws.on('message', (message: string) => {
         try {
           const data = JSON.parse(message.toString());
-          this.handleMessage(ws, data, userId);
+          this.handleMessage(ws, data);
         } catch (error) {
           console.error('Error handling message:', error);
         }
@@ -67,7 +67,7 @@ export class WebSocketService {
     });
   }
 
-  private handleMessage(ws: WebSocket, data: unknown, userId: string | null) {
+  private handleMessage(ws: WebSocket, data: unknown) {
     // Handle different message types
     const message = data as { type: string; payload?: unknown };
     

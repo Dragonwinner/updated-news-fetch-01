@@ -12,7 +12,9 @@ interface AnalyticsEventAttributes {
   createdAt?: Date;
 }
 
-interface AnalyticsEventCreationAttributes extends Optional<AnalyticsEventAttributes, 'id' | 'userId' | 'sessionId' | 'ipAddress' | 'userAgent'> {}
+interface AnalyticsEventCreationAttributes extends Optional<AnalyticsEventAttributes, 'id' | 'userId' | 'sessionId' | 'ipAddress' | 'userAgent'> {
+  // Empty interface to satisfy type requirements
+}
 
 export class AnalyticsEvent extends Model<AnalyticsEventAttributes, AnalyticsEventCreationAttributes> implements AnalyticsEventAttributes {
   public id!: string;

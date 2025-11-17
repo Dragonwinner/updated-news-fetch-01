@@ -65,7 +65,7 @@ async function startServer() {
           try {
             const token = authHeader.substring(7);
             user = verifyToken(token);
-          } catch (error) {
+          } catch {
             // Invalid token, user remains undefined
           }
         }
@@ -82,10 +82,9 @@ async function startServer() {
   startDomainGenerationJob();
 
   // Error handling
-  app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-    console.error('Error:', err);
+  app.use((_err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
     res.status(500).json({
-      error: config.nodeEnv === 'development' ? err.message : 'Internal server error',
+      error: config.nodeEnv === 'development' ? 'Internal server error' : 'Internal server error',
     });
   });
 
@@ -119,7 +118,7 @@ process.on('SIGINT', () => {
 });
 
 // Start the server
-startServer().catch((error) => {
-  console.error('Failed to start server:', error);
+startServer().catch(() => {
+  console.error('Failed to start server');
   process.exit(1);
 });

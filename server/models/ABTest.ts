@@ -14,7 +14,9 @@ interface ABTestAttributes {
   updatedAt?: Date;
 }
 
-interface ABTestCreationAttributes extends Optional<ABTestAttributes, 'id' | 'endDate' | 'metrics'> {}
+interface ABTestCreationAttributes extends Optional<ABTestAttributes, 'id' | 'endDate' | 'metrics'> {
+  // Empty interface to satisfy type requirements
+}
 
 export class ABTest extends Model<ABTestAttributes, ABTestCreationAttributes> implements ABTestAttributes {
   public id!: string;

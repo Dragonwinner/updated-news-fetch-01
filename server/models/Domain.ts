@@ -19,7 +19,9 @@ interface DomainAttributes {
   updatedAt?: Date;
 }
 
-interface DomainCreationAttributes extends Optional<DomainAttributes, 'id' | 'price' | 'checkedAt' | 'sourceArticleId' | 'popularity' | 'priceHistory'> {}
+interface DomainCreationAttributes extends Optional<DomainAttributes, 'id' | 'price' | 'checkedAt' | 'sourceArticleId' | 'popularity' | 'priceHistory'> {
+  // Empty interface to satisfy type requirements
+}
 
 export class Domain extends Model<DomainAttributes, DomainCreationAttributes> implements DomainAttributes {
   public id!: string;

@@ -54,7 +54,7 @@ export class NewsService {
    * Extract content from XML tag
    */
   private extractTag(xml: string, tagName: string): string {
-    const regex = new RegExp(`<${tagName}[^>]*>([\\s\\S]*?)<\/${tagName}>`, 'i');
+    const regex = new RegExp(`<${tagName}[^>]*>([\\s\\S]*?)</${tagName}>`, 'i');
     const match = xml.match(regex);
     return match ? match[1].trim() : '';
   }

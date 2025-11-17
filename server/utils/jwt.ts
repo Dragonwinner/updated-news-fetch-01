@@ -8,9 +8,10 @@ interface JWTPayload {
 }
 
 export const generateToken = (payload: JWTPayload): string => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return jwt.sign(payload, config.jwt.secret, {
     expiresIn: config.jwt.expire,
-  });
+  } as any);
 };
 
 export const verifyToken = (token: string): JWTPayload => {

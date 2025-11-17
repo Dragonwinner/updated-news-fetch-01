@@ -4,7 +4,6 @@ import helmet from 'helmet';
 import compression from 'compression';
 import morgan from 'morgan';
 import { ApolloServer } from '@apollo/server';
-import { expressMiddleware } from '@apollo/server/express4';
 import { createServer } from 'http';
 import { config } from './config';
 import { connectDatabase } from './config/database';
@@ -54,26 +53,41 @@ async function startServer() {
 
   await apolloServer.start();
 
-  app.use(
-    '/graphql',
-    expressMiddleware(apolloServer, {
-      context: async ({ req }) => {
-        const authHeader = req.headers.authorization;
-        let user = undefined;
+  // GraphQL endpoint with manual context extraction
+  app.post('/graphql', async (req: express.Request, res: express.Response) => {
+    const authHeader = req.headers.authorization;
+    let user;
 
-        if (authHeader && authHeader.startsWith('Bearer ')) {
-          try {
-            const token = authHeader.substring(7);
-            user = verifyToken(token);
-          } catch {
-            // Invalid token, user remains undefined
-          }
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      try {
+        const token = authHeader.substring(7);
+        user = verifyToken(token);
+      } catch {
+        // Invalid token, user remains undefined
+      }
+    }
+
+    try {
+      const response = await apolloServer.executeOperation(
+        {
+          query: req.body.query,
+          variables: req.body.variables,
+          operationName: req.body.operationName,
+        },
+        {
+          contextValue: { user },
         }
+      );
 
-        return { user };
-      },
-    })
-  );
+      if (response.body.kind === 'single') {
+        res.status(200).json(response.body.singleResult);
+      } else {
+        res.status(200).send('Incremental delivery not supported');
+      }
+    } catch (error) {
+      res.status(500).json({ errors: [{ message: 'Internal server error' }] });
+    }
+  });
 
   // Initialize WebSocket
   initializeWebSocket(httpServer);

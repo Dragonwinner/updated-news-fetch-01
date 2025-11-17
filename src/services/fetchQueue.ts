@@ -7,13 +7,17 @@ interface QueueItem<T> {
 }
 
 class FetchQueue {
-  private queue: QueueItem<any>[] = [];
+  private queue: QueueItem<unknown>[] = [];
   private isProcessing = false;
   private rateLimitDelay = 1000; // 1 second between requests
 
   async add<T>(task: () => Promise<T>): Promise<T> {
-    return new Promise((resolve, reject) => {
-      this.queue.push({ task, resolve, reject });
+    return new Promise<T>((resolve, reject) => {
+      this.queue.push({ 
+        task: task as () => Promise<unknown>, 
+        resolve: resolve as (value: unknown) => void, 
+        reject 
+      });
       this.process();
     });
   }

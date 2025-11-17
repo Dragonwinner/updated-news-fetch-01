@@ -184,6 +184,228 @@ GET /api/health
 }
 ```
 
+### Admin (Admin Role Required)
+
+All admin endpoints require authentication with an admin role JWT token.
+
+#### Get Dashboard Statistics
+```http
+GET /api/admin/stats
+Authorization: Bearer <admin_token>
+```
+
+**Response:**
+```json
+{
+  "users": {
+    "total": 1245,
+    "active": 1100,
+    "admins": 5,
+    "newToday": 12,
+    "newThisWeek": 89,
+    "newThisMonth": 312
+  },
+  "domains": {
+    "total": 45623,
+    "available": 12345,
+    "unavailable": 33278,
+    "generatedToday": 245,
+    "generatedThisWeek": 1890,
+    "generatedThisMonth": 7234,
+    "avgScore": 68
+  },
+  "articles": {
+    "total": 8934,
+    "todayCount": 45,
+    "thisWeekCount": 312,
+    "thisMonthCount": 1245,
+    "sources": [
+      { "source": "BBC", "count": 3245 },
+      { "source": "TechCrunch", "count": 2890 }
+    ]
+  },
+  "analytics": {
+    "totalEvents": 123456,
+    "uniqueUsers": 1100,
+    "uniqueSessions": 2345,
+    "topEvents": [
+      { "eventType": "domain_view", "count": 45623 },
+      { "eventType": "page_view", "count": 23456 }
+    ]
+  },
+  "system": {
+    "databaseSize": "245 MB",
+    "redisConnected": true,
+    "uptime": 345678.9
+  }
+}
+```
+
+#### Get User Growth Data
+```http
+GET /api/admin/stats/user-growth?days=30
+Authorization: Bearer <admin_token>
+```
+
+**Query Parameters:**
+- `days` (optional): Number of days to fetch (default: 30)
+
+**Response:**
+```json
+[
+  {
+    "date": "2024-01-01",
+    "total": 1200,
+    "new": 15
+  },
+  {
+    "date": "2024-01-02",
+    "total": 1215,
+    "new": 18
+  }
+]
+```
+
+#### Get Domain Generation Trends
+```http
+GET /api/admin/stats/domain-generation?days=30
+Authorization: Bearer <admin_token>
+```
+
+**Query Parameters:**
+- `days` (optional): Number of days to fetch (default: 30)
+
+**Response:**
+```json
+[
+  {
+    "date": "2024-01-01",
+    "count": 245,
+    "available": 78
+  },
+  {
+    "date": "2024-01-02",
+    "count": 312,
+    "available": 95
+  }
+]
+```
+
+#### Get Activity Metrics
+```http
+GET /api/admin/stats/activity?hours=24
+Authorization: Bearer <admin_token>
+```
+
+**Query Parameters:**
+- `hours` (optional): Number of hours to fetch (default: 24)
+
+**Response:**
+```json
+[
+  {
+    "hour": "2024-01-01 00:00",
+    "events": 245,
+    "users": 78
+  },
+  {
+    "hour": "2024-01-01 01:00",
+    "events": 189,
+    "users": 56
+  }
+]
+```
+
+#### Get All Users
+```http
+GET /api/admin/users?page=1&limit=50
+Authorization: Bearer <admin_token>
+```
+
+**Query Parameters:**
+- `page` (optional): Page number (default: 1)
+- `limit` (optional): Results per page (default: 50)
+
+**Response:**
+```json
+{
+  "users": [
+    {
+      "id": "uuid",
+      "email": "user@example.com",
+      "firstName": "John",
+      "lastName": "Doe",
+      "role": "user",
+      "isActive": true,
+      "emailVerified": false,
+      "createdAt": "2024-01-01T00:00:00Z"
+    }
+  ],
+  "total": 1245,
+  "page": 1,
+  "totalPages": 25
+}
+```
+
+#### Update User Status
+```http
+PATCH /api/admin/users/:userId/status
+Authorization: Bearer <admin_token>
+Content-Type: application/json
+
+{
+  "isActive": false
+}
+```
+
+**Response:**
+```json
+{
+  "message": "User status updated successfully",
+  "user": {
+    "id": "uuid",
+    "email": "user@example.com",
+    "isActive": false
+  }
+}
+```
+
+#### Update User Role
+```http
+PATCH /api/admin/users/:userId/role
+Authorization: Bearer <admin_token>
+Content-Type: application/json
+
+{
+  "role": "admin"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "User role updated successfully",
+  "user": {
+    "id": "uuid",
+    "email": "user@example.com",
+    "role": "admin"
+  }
+}
+```
+
+#### Clear Statistics Cache
+```http
+POST /api/admin/cache/clear
+Authorization: Bearer <admin_token>
+```
+
+**Response:**
+```json
+{
+  "message": "Statistics cache cleared successfully"
+}
+```
+
 ---
 
 ## GraphQL API
@@ -326,6 +548,124 @@ query {
 }
 ```
 
+#### Admin Dashboard Statistics (Admin Only)
+```graphql
+query {
+  adminDashboardStats {
+    users {
+      total
+      active
+      admins
+      newToday
+      newThisWeek
+      newThisMonth
+    }
+    domains {
+      total
+      available
+      unavailable
+      generatedToday
+      generatedThisWeek
+      generatedThisMonth
+      avgScore
+    }
+    articles {
+      total
+      todayCount
+      thisWeekCount
+      thisMonthCount
+      sources {
+        source
+        count
+      }
+    }
+    analytics {
+      totalEvents
+      uniqueUsers
+      uniqueSessions
+      topEvents {
+        eventType
+        count
+      }
+    }
+    system {
+      databaseSize
+      redisConnected
+      uptime
+    }
+  }
+}
+```
+
+#### Admin User Growth (Admin Only)
+```graphql
+query GetUserGrowth($days: Int) {
+  adminUserGrowth(days: $days) {
+    date
+    total
+    new
+  }
+}
+```
+
+**Variables:**
+```json
+{
+  "days": 30
+}
+```
+
+#### Admin Domain Generation (Admin Only)
+```graphql
+query GetDomainGeneration($days: Int) {
+  adminDomainGeneration(days: $days) {
+    date
+    count
+    available
+  }
+}
+```
+
+#### Admin Activity Metrics (Admin Only)
+```graphql
+query GetActivityMetrics($hours: Int) {
+  adminActivityMetrics(hours: $hours) {
+    hour
+    events
+    users
+  }
+}
+```
+
+#### Admin Users List (Admin Only)
+```graphql
+query GetAllUsers($page: Int, $limit: Int) {
+  adminUsers(page: $page, limit: $limit) {
+    users {
+      id
+      email
+      firstName
+      lastName
+      role
+      isActive
+      emailVerified
+      createdAt
+    }
+    total
+    page
+    totalPages
+  }
+}
+```
+
+**Variables:**
+```json
+{
+  "page": 1,
+  "limit": 50
+}
+```
+
 ### Mutations
 
 #### Register User
@@ -418,6 +758,44 @@ mutation TrackEvent($eventType: String!, $eventData: String!) {
 {
   "eventType": "domain_view",
   "eventData": "{\"domainId\": \"uuid\"}"
+}
+```
+
+#### Admin Update User Status (Admin Only)
+```graphql
+mutation UpdateUserStatus($userId: ID!, $isActive: Boolean!) {
+  adminUpdateUserStatus(userId: $userId, isActive: $isActive) {
+    id
+    email
+    isActive
+  }
+}
+```
+
+**Variables:**
+```json
+{
+  "userId": "uuid",
+  "isActive": false
+}
+```
+
+#### Admin Update User Role (Admin Only)
+```graphql
+mutation UpdateUserRole($userId: ID!, $role: String!) {
+  adminUpdateUserRole(userId: $userId, role: $role) {
+    id
+    email
+    role
+  }
+}
+```
+
+**Variables:**
+```json
+{
+  "userId": "uuid",
+  "role": "admin"
 }
 ```
 

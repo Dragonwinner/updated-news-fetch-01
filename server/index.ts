@@ -13,7 +13,7 @@ import { resolvers } from './graphql/resolvers';
 import { initializeWebSocket } from './websocket';
 import { startDomainGenerationJob } from './jobs/domainGeneration';
 import routes from './routes';
-import { apiLimiter } from './middleware/rateLimit';
+import { apiLimiter, graphqlLimiter } from './middleware/rateLimit';
 import { verifyToken } from './utils/jwt';
 
 async function startServer() {
@@ -53,8 +53,8 @@ async function startServer() {
 
   await apolloServer.start();
 
-  // GraphQL endpoint with manual context extraction
-  app.post('/graphql', async (req: express.Request, res: express.Response) => {
+  // GraphQL endpoint with manual context extraction and rate limiting
+  app.post('/graphql', graphqlLimiter, async (req: express.Request, res: express.Response) => {
     const authHeader = req.headers.authorization;
     let user;
 

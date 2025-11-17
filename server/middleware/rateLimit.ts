@@ -21,3 +21,11 @@ export const strictLimiter = rateLimit({
   max: 10, // 10 requests per minute
   message: 'Rate limit exceeded.',
 });
+
+export const graphqlLimiter = rateLimit({
+  windowMs: config.rateLimit.windowMs,
+  max: config.rateLimit.maxRequests,
+  message: 'Too many GraphQL requests from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});

@@ -41,6 +41,7 @@
     "pg-hstore": "^2.3.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "recharts": "^3.4.1",
     "redis": "^5.9.0",
     "sequelize": "^6.37.7",
     "uuid": "^13.0.0",

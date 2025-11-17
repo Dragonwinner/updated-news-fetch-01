@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { Globe, RefreshCw, User, LogOut } from 'lucide-react';
+import { Globe, RefreshCw, User, LogOut, Shield } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { useAuthStore } from '../store/useAuthStore';
 
 interface HeaderProps {
   lastUpdated: Date | null;
   onAuthClick: () => void;
+  onAdminClick?: () => void;
 }
 
-export function Header({ lastUpdated, onAuthClick }: HeaderProps) {
+export function Header({ lastUpdated, onAuthClick, onAdminClick }: HeaderProps) {
   const { user, isAuthenticated, logout } = useAuthStore();
   const [showUserMenu, setShowUserMenu] = useState(false);
 
@@ -47,6 +48,18 @@ export function Header({ lastUpdated, onAuthClick }: HeaderProps) {
                       <p className="text-sm font-medium text-gray-900">{user.email}</p>
                       <p className="text-xs text-gray-500 capitalize">{user.role}</p>
                     </div>
+                    {user.role === 'admin' && onAdminClick && (
+                      <button
+                        onClick={() => {
+                          onAdminClick();
+                          setShowUserMenu(false);
+                        }}
+                        className="w-full flex items-center gap-2 px-4 py-2 text-sm text-purple-600 hover:bg-purple-50 transition-colors"
+                      >
+                        <Shield className="w-4 h-4" />
+                        Admin Panel
+                      </button>
+                    )}
                     <button
                       onClick={() => {
                         logout();

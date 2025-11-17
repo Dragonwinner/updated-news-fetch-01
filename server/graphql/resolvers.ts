@@ -3,6 +3,7 @@ import { DomainService } from '../services/domainService';
 import { NewsService } from '../services/newsService';
 import { AnalyticsService } from '../services/analyticsService';
 import { ABTestingService } from '../services/abTestingService';
+import { adminService } from '../services/adminService';
 import { UserAlert } from '../models/UserAlert';
 
 const authService = new AuthService();
@@ -66,6 +67,42 @@ export const resolvers = {
         variants: JSON.stringify(test.variants),
         metrics: JSON.stringify(test.metrics),
       }));
+    },
+
+    // Admin queries
+    adminDashboardStats: async (_: unknown, __: unknown, context: { user?: { userId: string; role: string } }) => {
+      if (!context.user || context.user.role !== 'admin') {
+        throw new Error('Admin access required');
+      }
+      return adminService.getDashboardStats();
+    },
+
+    adminUserGrowth: async (_: unknown, args: { days?: number }, context: { user?: { userId: string; role: string } }) => {
+      if (!context.user || context.user.role !== 'admin') {
+        throw new Error('Admin access required');
+      }
+      return adminService.getUserGrowthData(args.days || 30);
+    },
+
+    adminDomainGeneration: async (_: unknown, args: { days?: number }, context: { user?: { userId: string; role: string } }) => {
+      if (!context.user || context.user.role !== 'admin') {
+        throw new Error('Admin access required');
+      }
+      return adminService.getDomainGenerationData(args.days || 30);
+    },
+
+    adminActivityMetrics: async (_: unknown, args: { hours?: number }, context: { user?: { userId: string; role: string } }) => {
+      if (!context.user || context.user.role !== 'admin') {
+        throw new Error('Admin access required');
+      }
+      return adminService.getActivityMetrics(args.hours || 24);
+    },
+
+    adminUsers: async (_: unknown, args: { page?: number; limit?: number }, context: { user?: { userId: string; role: string } }) => {
+      if (!context.user || context.user.role !== 'admin') {
+        throw new Error('Admin access required');
+      }
+      return adminService.getAllUsers(args.page || 1, args.limit || 50);
     },
   },
 
@@ -135,6 +172,30 @@ export const resolvers = {
         context.user?.userId
       );
       return true;
+    },
+
+    // Admin mutations
+    adminUpdateUserStatus: async (_: unknown, args: {
+      userId: string;
+      isActive: boolean;
+    }, context: { user?: { userId: string; role: string } }) => {
+      if (!context.user || context.user.role !== 'admin') {
+        throw new Error('Admin access required');
+      }
+      return adminService.updateUserStatus(args.userId, args.isActive);
+    },
+
+    adminUpdateUserRole: async (_: unknown, args: {
+      userId: string;
+      role: string;
+    }, context: { user?: { userId: string; role: string } }) => {
+      if (!context.user || context.user.role !== 'admin') {
+        throw new Error('Admin access required');
+      }
+      if (args.role !== 'user' && args.role !== 'admin') {
+        throw new Error('Invalid role');
+      }
+      return adminService.updateUserRole(args.userId, args.role as 'user' | 'admin');
     },
   },
 };

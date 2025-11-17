@@ -1,7 +1,7 @@
 import { Response } from 'express';
-import { DomainService } from '../services/domainService.js';
-import { AuthRequest } from '../middleware/auth.js';
-import { AnalyticsService } from '../services/analyticsService.js';
+import { DomainService } from '../services/domainService';
+import { AuthRequest } from '../middleware/auth';
+import { AnalyticsService } from '../services/analyticsService';
 
 const domainService = new DomainService();
 const analyticsService = new AnalyticsService();

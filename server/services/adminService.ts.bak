@@ -1,10 +1,10 @@
 import { Op, QueryTypes } from 'sequelize';
-import { sequelize } from '../config/database.js';
-import { User } from '../models/User.js';
-import { Domain } from '../models/Domain.js';
-import { NewsArticle } from '../models/NewsArticle.js';
-import { AnalyticsEvent } from '../models/AnalyticsEvent.js';
-import { getRedisClient } from '../config/redis.js';
+import { sequelize } from '../config/database';
+import { User } from '../models/User';
+import { Domain } from '../models/Domain';
+import { NewsArticle } from '../models/NewsArticle';
+import { AnalyticsEvent } from '../models/AnalyticsEvent';
+import { getRedisClient } from '../config/redis';
 
 const CACHE_TTL = 300; // 5 minutes cache
 

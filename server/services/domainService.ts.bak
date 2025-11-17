@@ -1,6 +1,6 @@
-import { Domain } from '../models/Domain.js';
-import { NewsArticle } from '../models/NewsArticle.js';
-import { config } from '../config/index.js';
+import { Domain } from '../models/Domain';
+import { NewsArticle } from '../models/NewsArticle';
+import { config } from '../config';
 import { Op } from 'sequelize';
 
 export class DomainService {

@@ -1,4 +1,4 @@
-import { NewsArticle } from '../models/NewsArticle.js';
+import { NewsArticle } from '../models/NewsArticle';
 import axios from 'axios';
 
 interface RSSItem {

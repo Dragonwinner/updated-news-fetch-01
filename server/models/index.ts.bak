@@ -1,9 +1,9 @@
-import { User } from './User.js';
-import { Domain } from './Domain.js';
-import { NewsArticle } from './NewsArticle.js';
-import { UserAlert } from './UserAlert.js';
-import { AnalyticsEvent } from './AnalyticsEvent.js';
-import { ABTest } from './ABTest.js';
+import { User } from './User';
+import { Domain } from './Domain';
+import { NewsArticle } from './NewsArticle';
+import { UserAlert } from './UserAlert';
+import { AnalyticsEvent } from './AnalyticsEvent';
+import { ABTest } from './ABTest';
 
 // Define associations
 User.hasMany(UserAlert, { foreignKey: 'userId', as: 'alerts' });

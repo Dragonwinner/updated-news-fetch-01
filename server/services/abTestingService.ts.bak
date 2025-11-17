@@ -1,6 +1,6 @@
-import { ABTest } from '../models/ABTest.js';
-import { getRedisClient } from '../config/redis.js';
-import { config } from '../config/index.js';
+import { ABTest } from '../models/ABTest';
+import { getRedisClient } from '../config/redis';
+import { config } from '../config';
 
 export class ABTestingService {
   private redis;
